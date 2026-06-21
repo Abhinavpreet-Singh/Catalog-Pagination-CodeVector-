@@ -1,4 +1,4 @@
-# High-Performance Cursor Pagination Backend
+# Cursor Pagination Backend
 
 A Node.js/Express and PostgreSQL backend demonstrating high-performance, consistent cursor-based pagination over 200,000 products.
 
