@@ -1,0 +1,23 @@
+{
+  "name": "catalog-pagination",
+  "version": "1.0.0",
+  "description": "Cursor-based pagination backend for product catalog",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "seed": "node prisma/seed.js",
+    "test": "node test-pagination.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.15.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "prisma": "^5.15.0"
+  },
+  "type": "module"
+}

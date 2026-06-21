@@ -1,0 +1,19 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  name      String
+  category  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category, updatedAt(sort: Desc), id(sort: Desc)], name: "idx_products_category_updated")
+  @@index([updatedAt(sort: Desc), id(sort: Desc)], name: "idx_products_updated")
+}
