@@ -25,6 +25,35 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
+// GET / - Root welcome and status endpoint
+app.get('/', async (req, res) => {
+  try {
+    const count = await prisma.product.count();
+    res.json({
+      message: 'Hello from the Product Catalog Backend!',
+      status: 'healthy',
+      database: {
+        connected: true,
+        totalProducts: count,
+      },
+      endpoints: {
+        browseProducts: '/products?limit=20',
+        filterByCategory: '/products?category=electronics',
+        cursorPagination: '/products?cursor=timestamp_id',
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Hello from the Product Catalog Backend!',
+      status: 'degraded',
+      database: {
+        connected: false,
+        error: error.message,
+      },
+    });
+  }
+});
+
 // GET /products
 app.get('/products', async (req, res) => {
   const startTime = performance.now();
@@ -153,6 +182,19 @@ app.get('/products/:id', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const startServer = (port) => {
+  const server = app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.log(`Port ${port} is in use, retrying on port ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error('Server startup error:', err);
+    }
+  });
+};
+
+startServer(PORT);
